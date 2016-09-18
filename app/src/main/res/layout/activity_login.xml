@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/chat_name_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="用户名"
+        android:text="admin"/>
+
+    <EditText
+        android:id="@+id/chat_pwd_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="密码"
+        android:text="123123123a"
+        android:inputType="numberPassword" />
+
+    <Button
+        android:id="@+id/chat_login_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="登录" />
+</LinearLayout>

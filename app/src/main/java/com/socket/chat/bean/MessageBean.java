@@ -1,78 +1,98 @@
 package com.socket.chat.bean;
 
-public class MessageBean extends UserInfoBean {
+import java.io.Serializable;
 
-    private long messageId;// 消息id
-    private long groupId;// 群id
-    private boolean isGoup;// 是否是群消息
-    private int chatType;// 消息类型;1,文本；2，图片；3，小视频；4，文件；5，地理位置；6，语音；7，视频通话
-    private String content;// 文本消息内容
-    private String errorMsg;// 错误信息
-    private int errorCode;// 错误代码
-    private MessageFileBean chatFile;// 消息附件
+public class MessageBean implements Serializable {
+	private static final long serialVersionUID = 1L;
+	private long messageId;// 消息id
+	private long groupId;// 群id
+	private boolean isGoup;// 是否是群消息
+	private int chatType;// 消息类型;1,文本；2，图片；3，小视频；4，文件；5，地理位置；6，语音；7，视频通话
+	private String content;// 文本消息内容
+	private String errorMsg;// 错误信息
+	private int errorCode;// 错误代码
+	private int userId;//用户id
+	private int friendId;//目标好友id
+	private MessageFileBean chatFile;// 消息附件
 
-    public long getMessageId() {
-        return messageId;
-    }
+	public int getFriendId() {
+		return friendId;
+	}
 
-    public void setMessageId(long messageId) {
-        this.messageId = messageId;
-    }
+	public void setFriendId(int friendId) {
+		this.friendId = friendId;
+	}
 
-    public long getGroupId() {
-        return groupId;
-    }
+	public int getUserId() {
+		return userId;
+	}
 
-    public void setGroupId(long groupId) {
-        this.groupId = groupId;
-    }
+	public void setUserId(int userId) {
+		this.userId = userId;
+	}
 
-    public boolean isGoup() {
-        return isGoup;
-    }
+	public long getMessageId() {
+		return messageId;
+	}
 
-    public void setGoup(boolean isGoup) {
-        this.isGoup = isGoup;
-    }
+	public void setMessageId(long messageId) {
+		this.messageId = messageId;
+	}
 
-    public int getChatType() {
-        return chatType;
-    }
+	public long getGroupId() {
+		return groupId;
+	}
 
-    public void setChatType(int chatType) {
-        this.chatType = chatType;
-    }
+	public void setGroupId(long groupId) {
+		this.groupId = groupId;
+	}
 
-    public String getContent() {
-        return content;
-    }
+	public boolean isGoup() {
+		return isGoup;
+	}
 
-    public void setContent(String content) {
-        this.content = content;
-    }
+	public void setGoup(boolean isGoup) {
+		this.isGoup = isGoup;
+	}
 
-    public String getErrorMsg() {
-        return errorMsg;
-    }
+	public int getChatType() {
+		return chatType;
+	}
 
-    public void setErrorMsg(String errorMsg) {
-        this.errorMsg = errorMsg;
-    }
+	public void setChatType(int chatType) {
+		this.chatType = chatType;
+	}
 
-    public int getErrorCode() {
-        return errorCode;
-    }
+	public String getContent() {
+		return content;
+	}
 
-    public void setErrorCode(int errorCode) {
-        this.errorCode = errorCode;
-    }
+	public void setContent(String content) {
+		this.content = content;
+	}
 
-    public MessageFileBean getChatFile() {
-        return chatFile;
-    }
+	public String getErrorMsg() {
+		return errorMsg;
+	}
 
-    public void setChatFile(MessageFileBean chatFile) {
-        this.chatFile = chatFile;
-    }
+	public void setErrorMsg(String errorMsg) {
+		this.errorMsg = errorMsg;
+	}
+
+	public int getErrorCode() {
+		return errorCode;
+	}
+
+	public void setErrorCode(int errorCode) {
+		this.errorCode = errorCode;
+	}
+
+	public MessageFileBean getChatFile() {
+		return chatFile;
+	}
+
+	public void setChatFile(MessageFileBean chatFile) {
+		this.chatFile = chatFile;
+	}
 
 }

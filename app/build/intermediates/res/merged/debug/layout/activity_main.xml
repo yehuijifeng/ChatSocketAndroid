@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.socket.chat.MainActivity">
+    tools:context=".activity.MainActivity">
 
     <ScrollView
         android:id="@+id/scrollView"
@@ -44,4 +44,4 @@
     </LinearLayout>
 
 </LinearLayout>
-<!-- From: file:/D:/GitHub/ChatSocket/ChatSocket/app/src/main/res/layout/activity_main.xml -->
+<!-- From: file:/D:/GitHub/ChatSocketAndroid/app/src/main/res/layout/activity_main.xml -->

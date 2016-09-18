@@ -1,4 +1,4 @@
-package com.socket.chat;
+package com.socket.chat.activity;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,14 +11,16 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.socket.chat.service.ChatServer;
+import com.socket.chat.R;
+import com.socket.chat.appliaction.ChatAppliaction;
 
 public class MainActivity extends AppCompatActivity {
+
     private LinearLayout chat_ly;
     private TextView left_text, right_view;
     private EditText chat_et;
     private Button send_btn;
-    private ChatServer chatServer;
+    private ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,29 +32,44 @@ public class MainActivity extends AppCompatActivity {
         send_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                chatServer.sendMessage(chat_et.getText().toString().trim());
+                ChatAppliaction.chatServer.sendMessage(chat_et.getText().toString().trim());
+                chat_ly.addView(initRightView(chat_et.getText().toString().trim()));
             }
         });
-        initTextView();
-        chatServer = new ChatServer(new Handler() {
+        //添加消息接收队列
+        ChatAppliaction.chatServer.setChatHandler(new Handler() {
             @Override
             public void handleMessage(Message msg) {
                 if (msg.what == 1) {
                     //发送回来消息后，更新ui
-                    right_view.append(msg.obj.toString());
+                    chat_ly.addView(initLeftView(msg.obj.toString()));
                 }
             }
         });
     }
-    private void initTextView() {
-        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        left_text = new TextView(this);
+
+    /**靠右的消息
+     * @param messageContent
+     * @return
+     */
+    private View initRightView(String messageContent) {
         right_view = new TextView(this);
-        left_text.setLayoutParams(layoutParams);
         right_view.setLayoutParams(layoutParams);
-        left_text.setGravity(View.FOCUS_LEFT);
         right_view.setGravity(View.FOCUS_RIGHT);
+        right_view.setText(messageContent);
+        return right_view;
     }
 
+    /**靠左的消息
+     * @param messageContent
+     * @return
+     */
+    private View initLeftView(String messageContent) {
+        left_text = new TextView(this);
+        left_text.setLayoutParams(layoutParams);
+        left_text.setGravity(View.FOCUS_LEFT);
+        left_text.setText(messageContent);
+        return left_text;
+    }
 
 }

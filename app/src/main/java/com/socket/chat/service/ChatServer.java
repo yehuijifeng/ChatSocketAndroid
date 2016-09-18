@@ -6,17 +6,15 @@ import android.os.Message;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.socket.chat.SocketUrls;
+import com.socket.chat.appliaction.ChatAppliaction;
 import com.socket.chat.bean.MessageBean;
+import com.socket.chat.bean.UserInfoBean;
+import com.socket.chat.urls.SocketUrls;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -37,24 +35,46 @@ public class ChatServer {
     OutputStream output;
     DataOutputStream dataOutputStream;
 
-    public ChatServer(Handler handler) {
-        this.handler = handler;
+    public ChatServer() {
         initMessage();
         initChatServer();
     }
 
-    private void initChatServer() {
-        receiveMessage();//开个线程接收消息
+    /**
+     * 消息队列，用于传递消息
+     *
+     * @param handler
+     */
+    public void setChatHandler(Handler handler) {
+        this.handler = handler;
     }
 
+    private void initChatServer() {
+        //开个线程接收消息
+        receiveMessage();
+    }
+
+    /**
+     * 初始化用户信息
+     */
     private void initMessage() {
         messageBean = new MessageBean();
-        messageBean.setUserId(1);
+        UserInfoBean userInfoBean = new UserInfoBean();
+        userInfoBean.setUserId(2);
         messageBean.setMessageId(1);
         messageBean.setChatType(1);
-        messageBean.setUserName("夜辉疾风");
+        userInfoBean.setUserName("admin");
+        userInfoBean.setUserPwd("123123123a");
+        messageBean.setUserId(2);
+        messageBean.setFriendId(1);
+        ChatAppliaction.userInfoBean = userInfoBean;
     }
 
+    /**
+     * 发送消息
+     *
+     * @param contentMsg
+     */
     public void sendMessage(String contentMsg) {
         try {
             if (socket == null) {
@@ -68,14 +88,11 @@ public class ChatServer {
             String aaa = new String(str);
             messageBean.setContent(aaa);
             String messageJson = gson.toJson(messageBean);
-            //printWriter.println(messageJson);
-            //printWriter.flush();
             /**
              * 因为服务器那边的readLine()为阻塞读取
              * 如果它读取不到换行符或者输出流结束就会一直阻塞在那里
-             *
+             * 所以在json消息最后加上换行符，用于告诉服务器，消息已经发送完毕了
              * */
-
             messageJson += "\n";
             output.write(messageJson.getBytes("utf-8"));// 换行打印
             output.flush(); // 刷新输出流，使Server马上收到该字符串
@@ -109,8 +126,9 @@ public class ChatServer {
                         // 获取客户端的信息
                         while ((line = bff.readLine()) != null) {
                             Log.i("socket", "内容 : " + line);
+                            MessageBean messageBean = gson.fromJson(line, MessageBean.class);
                             Message message = handler.obtainMessage();
-                            message.obj = line;
+                            message.obj = messageBean.getContent();
                             message.what = 1;
                             handler.sendMessage(message);
                         }
@@ -128,45 +146,8 @@ public class ChatServer {
         }).start();
     }
 
-    /**
-     * 将字节数组转换成对象
-     *
-     * @param bytes
-     * @return
-     */
-    private Object byteToObject(byte[] bytes) {
-        if (bytes == null)
-            return null;
-        Object obj = null;
-        try {
-            // bytearray to object
-            ByteArrayInputStream bi = new ByteArrayInputStream(bytes);
-            ObjectInputStream oi = new ObjectInputStream(bi);
-            obj = oi.readObject();
-            bi.close();
-            oi.close();
-        } catch (Exception e) {
-            System.out.println("translation" + e.getMessage());
-            e.printStackTrace();
-        }
-        return obj;
-    }
 
-    /**
-     * 将输入流穿换成字节数组
-     *
-     * @param in
-     * @return
-     * @throws IOException
-     */
-    public static byte[] readBytes(InputStream in) throws IOException {
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        byte[] buffer = new byte[1024];
-        int n;
-        while ((n = in.read(buffer)) != -1) {
-            out.write(buffer, 0, n);
-        }
-        return out.toByteArray();
+    public void getSocekt() {
+        if (socket != null) return;
     }
-
 }
