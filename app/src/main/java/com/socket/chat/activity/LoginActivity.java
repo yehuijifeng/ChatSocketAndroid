@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.socket.chat.R;
 import com.socket.chat.appliaction.ChatAppliaction;
@@ -30,35 +31,45 @@ public class LoginActivity extends AppCompatActivity {
         chat_login_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (getLogin(chat_name_text.getText().toString().trim(), chat_pwd_text.getText().toString().trim()) == 1) {
-                    getChatServer();
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    startActivity(intent);
-                    finish();
-                } else if (getLogin(chat_name_text.getText().toString().trim(), chat_pwd_text.getText().toString().trim()) == 2) {
-                    getChatServer();
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    startActivity(intent);
-                    finish();
+                int status = getLogin(chat_name_text.getText().toString().trim(), chat_pwd_text.getText().toString().trim());
+                if (status == -1 || status == 0) {
+                    Toast.makeText(LoginActivity.this, "密码错误", Toast.LENGTH_LONG).show();
+                    return;
                 }
+                getChatServer(getLogin(chat_name_text.getText().toString().trim(), chat_pwd_text.getText().toString().trim()));
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
     }
 
+    /**
+     * 返回登陆状态，1为用户，2为另一个用户，这里模拟出两个用户互相通讯
+     *
+     * @param name
+     * @param pwd
+     * @return
+     */
     private int getLogin(String name, String pwd) {
         if (TextUtils.isEmpty(name) || TextUtils.isEmpty(pwd)) {
-            return 0;
+            return 0;//没有输入完整密码
         } else if (name.equals("admin") && pwd.equals("1")) {
-            return 1;
+            return 1;//用户1
         } else if (name.equals("admin") && pwd.equals("2")) {
-            return 2;
+            return 2;//用户2
         } else {
-            return -1;
+            return -1;//密码错误
         }
     }
 
-    private void getChatServer() {
-        ChatAppliaction.chatServer = new ChatServer();
+    /**
+     * 实例化一个聊天服务
+     *
+     * @param status
+     */
+    private void getChatServer(int status) {
+        ChatAppliaction.chatServer = new ChatServer(status);
     }
 
 }

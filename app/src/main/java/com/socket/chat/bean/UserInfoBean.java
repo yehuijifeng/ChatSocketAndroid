@@ -10,6 +10,7 @@ public class UserInfoBean implements Serializable {
 	private String userPwd;// 用户密码
 	private String userIcon;// 用户头像
 
+
 	public long getUserId() {
 		return userId;
 	}

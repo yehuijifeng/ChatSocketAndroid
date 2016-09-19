@@ -35,8 +35,8 @@ public class ChatServer {
     OutputStream output;
     DataOutputStream dataOutputStream;
 
-    public ChatServer() {
-        initMessage();
+    public ChatServer(int status) {
+        initMessage(status);
         initChatServer();
     }
 
@@ -57,7 +57,8 @@ public class ChatServer {
     /**
      * 初始化用户信息
      */
-    private void initMessage() {
+    private void initMessage(int status) {
+
         messageBean = new MessageBean();
         UserInfoBean userInfoBean = new UserInfoBean();
         userInfoBean.setUserId(2);
@@ -65,8 +66,14 @@ public class ChatServer {
         messageBean.setChatType(1);
         userInfoBean.setUserName("admin");
         userInfoBean.setUserPwd("123123123a");
-        messageBean.setUserId(2);
-        messageBean.setFriendId(1);
+        //以下操作模仿当用户点击了某个好友展开的聊天界面，将保存用户id和聊天目标用户id
+        if (status == 1) {//如果是用户1，那么他就指向用户2聊天
+            messageBean.setUserId(1);
+            messageBean.setFriendId(2);
+        } else if (status == 2) {//如果是用户2，那么他就指向用户1聊天
+            messageBean.setUserId(2);
+            messageBean.setFriendId(1);
+        }
         ChatAppliaction.userInfoBean = userInfoBean;
     }
 
@@ -147,7 +154,8 @@ public class ChatServer {
     }
 
 
-    public void getSocekt() {
-        if (socket != null) return;
+    public Socket getSocekt() {
+        if (socket == null) return null;
+        return socket;
     }
 }
