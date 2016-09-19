@@ -1,6 +1,7 @@
 package com.socket.chat.bean;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class UserInfoBean implements Serializable {
 	private static final long serialVersionUID = 2L;
@@ -9,7 +10,15 @@ public class UserInfoBean implements Serializable {
 	private String likeName;// 昵称
 	private String userPwd;// 用户密码
 	private String userIcon;// 用户头像
+	private List<UserGroupBean> groupList;//当前用户所拥有的群
 
+	public List<UserGroupBean> getGroupList() {
+		return groupList;
+	}
+
+	public void setGroupList(List<UserGroupBean> groupList) {
+		this.groupList = groupList;
+	}
 
 	public long getUserId() {
 		return userId;
