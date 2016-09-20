@@ -33,6 +33,8 @@ public class ChatListActivity extends AppCompatActivity implements View.OnClickL
                 startActivity(intent);
                 break;
             case R.id.group_ly://群聊
+                Intent intent1 = new Intent(ChatListActivity.this, GroupActivity.class);
+                startActivity(intent1);
                 break;
         }
     }

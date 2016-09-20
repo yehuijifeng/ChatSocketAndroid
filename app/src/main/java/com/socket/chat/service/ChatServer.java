@@ -3,6 +3,7 @@ package com.socket.chat.service;
 
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -73,7 +74,11 @@ public class ChatServer {
         } else if (status == 2) {//如果是用户2，那么他就指向用户1聊天
             messageBean.setUserId(2);
             messageBean.setFriendId(1);
+        } else if (status == 3) {//如果是用户2，那么他就指向用户1聊天
+            messageBean.setUserId(3);
+            messageBean.setFriendId(1);
         }
+        messageBean.setGroupId(1);//聊天的目标群id，这里模拟成id为1的群
         ChatAppliaction.userInfoBean = userInfoBean;
     }
 
@@ -83,6 +88,7 @@ public class ChatServer {
      * @param contentMsg
      */
     public void sendMessage(String contentMsg) {
+        if (TextUtils.isEmpty(contentMsg)) return;
         try {
             if (socket == null) {
                 Message message = handler.obtainMessage();
@@ -135,7 +141,7 @@ public class ChatServer {
                             Log.i("socket", "内容 : " + line);
                             MessageBean messageBean = gson.fromJson(line, MessageBean.class);
                             Message message = handler.obtainMessage();
-                            message.obj = messageBean.getContent();
+                            message.obj = messageBean;
                             message.what = 1;
                             handler.sendMessage(message);
                         }

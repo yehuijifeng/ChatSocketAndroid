@@ -37,7 +37,7 @@ public class LoginActivity extends AppCompatActivity {
                     return;
                 }
                 getChatServer(getLogin(chat_name_text.getText().toString().trim(), chat_pwd_text.getText().toString().trim()));
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                Intent intent = new Intent(LoginActivity.this, ChatListActivity.class);
                 startActivity(intent);
                 finish();
             }
@@ -58,6 +58,8 @@ public class LoginActivity extends AppCompatActivity {
             return 1;//用户1
         } else if (name.equals("admin") && pwd.equals("2")) {
             return 2;//用户2
+        } else if (name.equals("admin") && pwd.equals("3")) {
+            return 3;//用户2
         } else {
             return -1;//密码错误
         }
