@@ -36,7 +36,7 @@ public class GroupActivity extends AppCompatActivity {
         send_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ChatAppliaction.chatServer.sendMessage(chat_et.getText().toString().trim());
+                ChatAppliaction.chatServer.sendMessages(chat_et.getText().toString().trim());
                 chat_ly.addView(initRightView(chat_et.getText().toString().trim()));
             }
         });
@@ -46,7 +46,6 @@ public class GroupActivity extends AppCompatActivity {
             public void handleMessage(Message msg) {
                 if (msg.what == 1) {
                     MessageBean messageBean = (MessageBean) msg.obj;
-
                     //发送回来消息后，更新ui
                     chat_ly.addView(messageBean.getUserId() == 1 ? initLeftViewOne(messageBean.getContent()) : initLeftViewTow(messageBean.getContent()));
                 }

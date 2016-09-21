@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.socket.chat.R;
 import com.socket.chat.appliaction.ChatAppliaction;
+import com.socket.chat.bean.MessageBean;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         send_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ChatAppliaction.chatServer.sendMessage(chat_et.getText().toString().trim());
+                ChatAppliaction.chatServer.sendMessages(chat_et.getText().toString().trim());
                 chat_ly.addView(initRightView(chat_et.getText().toString().trim()));
             }
         });
@@ -42,13 +43,15 @@ public class MainActivity extends AppCompatActivity {
             public void handleMessage(Message msg) {
                 if (msg.what == 1) {
                     //发送回来消息后，更新ui
-                    chat_ly.addView(initLeftView(msg.obj.toString()));
+                    chat_ly.addView(initLeftView(((MessageBean) msg.obj).getContent()));
                 }
             }
         });
     }
 
-    /**靠右的消息
+    /**
+     * 靠右的消息
+     *
      * @param messageContent
      * @return
      */
@@ -60,7 +63,9 @@ public class MainActivity extends AppCompatActivity {
         return right_view;
     }
 
-    /**靠左的消息
+    /**
+     * 靠左的消息
+     *
      * @param messageContent
      * @return
      */

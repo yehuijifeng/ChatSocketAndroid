@@ -35,6 +35,15 @@ public class ChatServer {
     InputStream input;
     OutputStream output;
     DataOutputStream dataOutputStream;
+    //在socket初始化成功以后发送一个空消息让服务器先保存该用户的信息
+    private Handler handlers = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            if (msg.what == -1) {
+                sendMessages("[USER_LOGIN]");
+            }
+        }
+    };
 
     public ChatServer(int status) {
         initMessage(status);
@@ -65,6 +74,7 @@ public class ChatServer {
         userInfoBean.setUserId(2);
         messageBean.setMessageId(1);
         messageBean.setChatType(1);
+        messageBean.setChatStyle(1);
         userInfoBean.setUserName("admin");
         userInfoBean.setUserPwd("123123123a");
         //以下操作模仿当用户点击了某个好友展开的聊天界面，将保存用户id和聊天目标用户id
@@ -87,7 +97,7 @@ public class ChatServer {
      *
      * @param contentMsg
      */
-    public void sendMessage(String contentMsg) {
+    public void sendMessages(String contentMsg) {
         if (TextUtils.isEmpty(contentMsg)) return;
         try {
             if (socket == null) {
@@ -134,6 +144,9 @@ public class ChatServer {
                     BufferedReader bff = new BufferedReader(new InputStreamReader(input));
                     // 读取发来服务器信息
                     String line;
+                    Message messages = handlers.obtainMessage();
+                    messages.what = -1;
+                    handlers.sendMessage(messages);
                     while (true) {
                         Thread.sleep(500);
                         // 获取客户端的信息
