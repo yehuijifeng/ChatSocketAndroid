@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.socket.chat.FileUtils;
 import com.socket.chat.appliaction.ChatAppliaction;
 import com.socket.chat.bean.MessageBean;
 import com.socket.chat.bean.UserInfoBean;
@@ -99,6 +100,7 @@ public class ChatServer {
      */
     public void sendMessages(String contentMsg) {
         if (TextUtils.isEmpty(contentMsg)) return;
+        ChatFileServer chatFileServer = new ChatFileServer();
         try {
             if (socket == null) {
                 Message message = handler.obtainMessage();
@@ -110,7 +112,9 @@ public class ChatServer {
             byte[] str = contentMsg.getBytes("utf-8");//将内容转utf-8
             String aaa = new String(str);
             messageBean.setContent(aaa);
+            chatFileServer.getFilePath(messageBean,socket, FileUtils.getSDFile() + "/" + "test.gif");
             String messageJson = gson.toJson(messageBean);
+
             /**
              * 因为服务器那边的readLine()为阻塞读取
              * 如果它读取不到换行符或者输出流结束就会一直阻塞在那里

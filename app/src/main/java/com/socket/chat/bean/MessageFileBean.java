@@ -7,7 +7,7 @@ public class MessageFileBean implements Serializable {
 	private int fileId;//文件id
 	private String fileName;//文件名称
 	private long fileLength;//文件长度
-	private Byte[] fileByte;//文件内容
+	private byte[] fileByte;//文件内容
 	private String fileType;//文件类型
 	private String fileTitle;//文件头名称
 	public int getFileId() {
@@ -28,10 +28,10 @@ public class MessageFileBean implements Serializable {
 	public void setFileLength(long fileLength) {
 		this.fileLength = fileLength;
 	}
-	public Byte[] getFileByte() {
+	public byte[] getFileByte() {
 		return fileByte;
 	}
-	public void setFileByte(Byte[] fileByte) {
+	public void setFileByte(byte[] fileByte) {
 		this.fileByte = fileByte;
 	}
 	public String getFileType() {
