@@ -7,18 +7,15 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.socket.chat.FileUtils;
 import com.socket.chat.appliaction.ChatAppliaction;
 import com.socket.chat.bean.MessageBean;
 import com.socket.chat.bean.UserInfoBean;
 import com.socket.chat.urls.SocketUrls;
 
 import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.net.Socket;
 
 /**
@@ -31,11 +28,9 @@ public class ChatServer {
     private Handler handler;
     private MessageBean messageBean;
     private Gson gson = new Gson();
-    // 由Socket对象得到输出流，并构造PrintWriter对象
-    PrintWriter printWriter;
-    InputStream input;
-    OutputStream output;
-    DataOutputStream dataOutputStream;
+    private InputStream input;
+    private OutputStream output;
+
     //在socket初始化成功以后发送一个空消息让服务器先保存该用户的信息
     private Handler handlers = new Handler() {
         @Override
@@ -100,7 +95,6 @@ public class ChatServer {
      */
     public void sendMessages(String contentMsg) {
         if (TextUtils.isEmpty(contentMsg)) return;
-        ChatFileServer chatFileServer = new ChatFileServer();
         try {
             if (socket == null) {
                 Message message = handler.obtainMessage();
@@ -112,21 +106,27 @@ public class ChatServer {
             byte[] str = contentMsg.getBytes("utf-8");//将内容转utf-8
             String aaa = new String(str);
             messageBean.setContent(aaa);
-            chatFileServer.getFilePath(messageBean,socket, FileUtils.getSDFile() + "/" + "test.gif");
-            String messageJson = gson.toJson(messageBean);
-
             /**
              * 因为服务器那边的readLine()为阻塞读取
              * 如果它读取不到换行符或者输出流结束就会一直阻塞在那里
              * 所以在json消息最后加上换行符，用于告诉服务器，消息已经发送完毕了
              * */
-            messageJson += "\n";
+            String messageJson = gson.toJson(messageBean) + "\n";
             output.write(messageJson.getBytes("utf-8"));// 换行打印
             output.flush(); // 刷新输出流，使Server马上收到该字符串
         } catch (Exception e) {
             e.printStackTrace();
             Log.e("test", "错误：" + e.toString());
         }
+    }
+
+    /**
+     * 发送文件
+     *
+     * @param path
+     */
+    public void sendFileMessage(String path) {
+        new ChatFileServer().sendFileMessage(socket, path, handler, messageBean);
     }
 
     /**
@@ -139,11 +139,8 @@ public class ChatServer {
                 try {
                     // 向本机的8080端口发出客户请求
                     socket = new Socket(SocketUrls.IP, SocketUrls.PORT);
-                    // 由Socket对象得到输入流，并构造相应的BufferedReader对象
-                    printWriter = new PrintWriter(socket.getOutputStream());
                     input = socket.getInputStream();
                     output = socket.getOutputStream();
-                    dataOutputStream = new DataOutputStream(socket.getOutputStream());
                     // 从客户端获取信息
                     BufferedReader bff = new BufferedReader(new InputStreamReader(input));
                     // 读取发来服务器信息
